@@ -115,8 +115,64 @@ Flutter는 UI 요소들을 각 플랫폼(iOS/AOS..)에서 제공하는 컨트롤
 ### Widget State
 
 🔸 Stateful Widget에서 State를 따로 분리함으로써 Stateful Widget또한 Stateless Widget과 같은 방식으로 동작할 수 있도록 만들었다.<br/>
-🔸 즉 위젯트리 자체는 Statless 위젯 동작으로 퉁치고 State는 Element Tree가 들고 관리하는 구조가 된다. -> State를 프레임워크에서 관리해줌
-🔸 
+🔸 즉 위젯트리 자체는 Statless 위젯 동작으로 퉁치고 State는 Element Tree가 들고 관리하는 구조가 된다. -> State를 프레임워크에서 관리해줌<br/>
+🔸 이해를 못한 관계로 추후 플러터 이해도 높아졌을시 작성
+
+<br/>
+
+#
+
+### Rendering and layout
+
+<img width="450" alt="image" src="https://github.com/suojae3/flutter_docs_study/assets/126137760/c8be6825-7acd-432d-bb0e-eeb24bb8e364">
+
+<br/>
+<br/>
+
+🔹 **Build** <br/>
+build 단계에서는 Widget Tree/Element Tree/Render Tree가 만들어진다.<br/>
+
+<img width="300" alt="image" src="https://github.com/suojae3/flutter_docs_study/assets/126137760/99483b02-cfae-4263-99ee-5be52da5c046">
+
+<br/>
+
+이 단계에서 Element는 위젯의 타입과 키를 확인하고 상태와 생명주기를 관리한다. 그리고 각 element들은 자신이 사용할 Render object를 만든다.
+
+<br/>
+
+🔹 **Layout** <br/>
+
+<img width="400" alt="image" src="https://github.com/suojae3/flutter_docs_study/assets/126137760/d55446ed-67e6-47f6-8d61-e2e0daf8bc8a">
+
+<br/>
+
+Layout phase에서는 RenderTree가 상위위젯부터 하위위젯까지 constraints를 전달하고 다시 하위위젯부터 상위위젯까지 size를 전달한다. 당연한 이야기이지만 상위부터 최소/최대 제약조건이 마지막 하위 위젯 제약까지 계산이 되고나서야 사이즈가 결정되고 결정된 사이즈는 하위부터 상위까지 전달한다.
+
+<br/>
+
+🔹 **Paint** <br/>
+
+<img width="400" alt="image" src="https://github.com/suojae3/flutter_docs_study/assets/126137760/d41489b6-c557-4696-a995-f35db9451b42">
+
+- Layout이 끝나고 Renderobject의 최종결과물, 즉 플러터 프레임워크단의 최종 결과물인 **Layer Object**가 만들어지면 이를 GPU가 그릴 수 있게 엔진으로 보낸다 <br/>
+  
+
+<br/>
+
+🔹 **Compositioning Phase** <br/>
+- 프레임워크로부터 Layer Object를 받은 프레임엔진은 GPU를 통해 각레이어를 결합하여 최종이미지를 생성한다. <br/>
+
+<br/>
+
+🔹 **Rasterize Phase** <br/>
+- 생성한 최종이미지를 GPU는 픽셀로 바꿔 화면에 UI를 띄운다. 만약 바뀐게 없다면 픽셀을 재사용한다.
+
+<br/>
+
+
+<img src="https://github.com/suojae3/flutter_docs_study/assets/126137760/0d1108b4-d99b-44e7-ae03-9ea0babcd6fe" width="500">
+
+
 
 
 
