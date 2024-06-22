@@ -1,9 +1,12 @@
 # flutter_docs_study
 
-<img src="https://flutter-ko.dev/assets/images/shared/brand/flutter/logo/flutter-lockup.png" width="500">
+<br/>
 
-플러터 공식문서를 학습하며 기록학 레포지토리입니다 :)
+<img src="https://flutter-ko.dev/assets/images/shared/brand/flutter/logo/flutter-lockup.png" width="400">
 
+플러터 공식문서를 학습하며 기록한 레포지토리입니다 :)
+
+<br/>
 <br/>
 
 ## Flutter concepts
