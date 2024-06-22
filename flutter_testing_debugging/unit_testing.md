@@ -4,6 +4,12 @@
 
 <br/>
 
+## 목차
+1. [**An introduction to unit testing**](#an-introduction-to-unit-testing)
+2. [**Mock dependencies using Mockito**](#mock-dependencies-using-mockito)
+
+<br/>
+<br/>
 
 ## An introduction to unit testing
 
@@ -171,10 +177,40 @@ Future<Album> fetchAlbum(http.Client client) async {
 }
 ```
 
+<br/>
+
+#### 3. mock과 함께 테스트파일을 만든다.
+
+```dart
+import 'package:http/http.dart' as http;
+import 'package:mocking/main.dart';
+import 'package:mockito/annotations.dart';
+
+// Generate a MockClient using the Mockito package.
+// Create new instances of this class in each test.
+@GenerateMocks([http.Client])
+void main() { ... }
+```
+
+```
+dart run build_runner build
+```
+
 
 <br/>
 
-#### 3. 
+#### 4. 테스트 코드를 작성한다.
+
+
+
+
+
+<br/>
+
+#### 5. 테스트를 돌린다.
+
+
+
 
 
 
