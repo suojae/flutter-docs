@@ -158,31 +158,54 @@ void main() {
 
 <br/>
 
-```dart
-class CounterCubit extends Cubit<int> {
-  CounterCubit() : super(0);
+#### Cubit Error handling
 
-  void increment() {
-    addError(Exception('increment error!'), StackTrace.current);
-    emit(state + 1);
-  }
+```dart
+class MyBloc extends Bloc<MyEvent, MyState> {
+  MyBloc() : super(MyInitialState());
 
   @override
-  void onChange(Change<int> change) {
-    super.onChange(change);
-    print(change);
+  Stream<MyState> mapEventToState(MyEvent event) async* {
+    if (event is MyErrorEvent) {
+      try {
+        // 여기서 에러 발생시킴
+        throw Exception('This is a test error');
+      } catch (error) {
+        // 에러 발생 시 addError 호출
+        addError(error, StackTrace.current);
+      }
+    }
   }
 
   @override
   void onError(Object error, StackTrace stackTrace) {
-    print('$error, $stackTrace');
     super.onError(error, stackTrace);
+    // 에러 처리 로직: 로그 출력
+    print('Error: $error'); // 로그: Error: Exception: This is a test error
+    print('Stack Trace: $stackTrace'); // 로그: Stack Trace: <stack trace details>
+
+    // 에러 상태 전파 가능
+    // emit(MyErrorState(error.toString()));
   }
 }
 ```
 
-- 
+- 모든 큐빗 객체는 `addError` 메서드를 가지고 있고 에러가 발생할 때 이 메서드를 실행시킬 수 있다.
+- `addError()` 로 던진 에러이벤트는 `onError()` 함수를 재정의해서 받을 수 있다. 
 
+<br/>
+<br/>
+
+#
+
+### Bloc
+
+<img width="400" alt="image" src="https://github.com/suojae3/flutter_dart_docs/assets/126137760/fa560e98-68c1-4076-b43f-73ce2d3d5085">
+
+<br/>
+<br/>
+
+- `Bloc`은 큐빗보다 좀 더 복잡한 상태관리를 위한 객체이다.
 
 
 
