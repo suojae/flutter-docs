@@ -97,6 +97,93 @@ class CounterCubit extends Cubit<int> {
 }
 ```
 
+- Cubit클래스에서는 state를 제공해준다. 이때 오직 `emit()` 메서드를 통해서만 state를 변화시킬 수 있다.
+- emit은 오직 Cubit클래스 내부에서만 이용할 수 있다.
+
+<br/>
+
+```dart
+void main() {
+  final cubit = CounterCubit();
+  print(cubit.state); // 0
+  cubit.increment();
+  print(cubit.state); // 1
+  cubit.close();
+}
+```
+- 즉 이와 같이 외부에서는 상태를 직접 접근하여 쓰지 못하고 cubit 클래스에서 선언해둔 메서드를 통해 간접적으로 상태변환을 바꾸고 직접적인 상태접근은 읽기작업만 허용된다.
+- `Cubit`이 방출해주는 값을 스트림의 반응형으로 받고 싶다면 `listen` 메서드를 이용한다.
+- `Cubit`의 `emit`메서드는 기본적으로 스트림을 방출하기 때문에 안쓴다면 `close()`를 통해 메모리 해제가 필수다. 안그러면 메모리 누수 발생한다.
+- `cancel`은 구독 취소기능을 수행한다. 이때 스트림은 여전히 살려둔채 구독자입장에서 더이상 값을 안받는다고 취소할 뿐이다.
+
+<br/>
+
+```dart
+class CounterCubit extends Cubit<int> {
+  CounterCubit() : super(0);
+
+  void increment() => emit(state + 1);
+
+  @override
+  void onChange(Change<int> change) {
+    super.onChange(change);
+    print(change);
+  }
+}
+```
+- 외부 호출을 통한 상태변화를 큐빗 내부에서도 옵저빙해줄 수 있다. 큐빗의 `onChange()` 메서드 재정의를 이용하자
+
+<br/>
+
+```dart
+class SimpleBlocObserver extends BlocObserver {
+  @override
+  void onChange(BlocBase bloc, Change change) {
+    super.onChange(bloc, change);
+    print('${bloc.runtimeType} $change');
+  }
+}
+
+void main() {
+  Bloc.observer = SimpleBlocObserver();
+  CounterCubit()
+    ..increment()
+    ..close();
+}
+
+// CounterCubit Change { currentState: 0, nextState: 1 }
+// Change { currentState: 0, nextState: 1 }
+```
+- `BlocObserver`를 이용하면 모든 상태 변화를 한 곳에서 관찰하거나 에러처리를 해줄 수 있다.
+
+<br/>
+
+```dart
+class CounterCubit extends Cubit<int> {
+  CounterCubit() : super(0);
+
+  void increment() {
+    addError(Exception('increment error!'), StackTrace.current);
+    emit(state + 1);
+  }
+
+  @override
+  void onChange(Change<int> change) {
+    super.onChange(change);
+    print(change);
+  }
+
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    print('$error, $stackTrace');
+    super.onError(error, stackTrace);
+  }
+}
+```
+
+- 
+
+
 
 
 
