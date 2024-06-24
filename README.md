@@ -16,6 +16,13 @@
 
 #
 
+### Dart
+
+
+<br/>
+
+#
+
 ### Flutter concepts
 
 #### [1. Architectural overview]()
@@ -24,6 +31,28 @@
 
 
 
+<br/>
 
+#
+
+### State Management
+
+#### [1. Bloc]()
+
+#### [2. Provider]()
+
+#### [3. GetX]()
+
+#### [4. Riverpod]()
+
+
+
+<br/>
+
+#
+
+### Packages 
+
+#### [shared preferences]()
 
 
