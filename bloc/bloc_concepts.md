@@ -206,6 +206,34 @@ class MyBloc extends Bloc<MyEvent, MyState> {
 <br/>
 
 - `Bloc`은 큐빗보다 좀 더 복잡한 상태관리를 위한 객체이다.
+- `Cubit`처럼 상태를 받고싶을 때 직접적인 메서드 호출이 아니라 `Bloc`은 이벤트 자체를 받아 내부적으로 이벤트를 처리한다 (리덕스와 비슷하다. 액션을 받아와서 자체적으로 분기처리뒤 상태 업데이트)
+
+
+<br/>
+
+#### Creating a Bloc
+- 
+
+
+
+#### Bloc State Changes
+
+
+#### Using a Bloc
+
+
+#### Observing a Bloc
+
+#### Bloc Error Handling
+
+
+
+<br/>
+<br/>
+
+### Cubit vs. Bloc
+
+
 
 
 
