@@ -14,14 +14,79 @@
 
 <br/>
 
-#
 
-### Dart
+## Dart
+
+<br/>
+
+### Language
+
+<br/>
+
+#### 1. Syntax basics
+
+<br/>
+
+#### 2. Types
+
+<br/>
+
+#### 3. Patterns
+
+<br/>
+
+#### 4. Functions
+
+<br/>
+
+#### 5. Control fLow
+
+<br/>
+
+#### 6. Error handling
+
+<br/>
+
+#### 7. Classes & Objects
+
+- [Mixins]()
+
+
+<br/>
+
+#### 8. Classes Modifiers
+
+<br/>
+
+#### 9. Concurrency
+
+<br/>
+
+#### 10. Null safety
 
 
 <br/>
 
 #
+
+### Core libraties
+
+<br/>
+<br/>
+
+
+#
+
+### Effective Dart
+
+
+<br/>
+<br/>
+<br/>
+
+## Flutter
+
+<br/>
 
 ### Flutter concepts
 
