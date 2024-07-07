@@ -49,7 +49,7 @@
 
 #### 7. Classes & Objects
 
-- [Mixins]()
+- [Mixins](https://github.com/suojae3/flutter_dart_docs/blob/main/dart/mixins.md)
 
 
 <br/>
