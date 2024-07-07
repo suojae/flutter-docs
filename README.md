@@ -29,6 +29,8 @@
 
 #### 2. Types
 
+- [Collections](https://github.com/suojae3/flutter_dart_docs/blob/main/dart/collections.md)
+
 <br/>
 
 #### 3. Patterns
