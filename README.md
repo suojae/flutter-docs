@@ -47,6 +47,9 @@
 
 #### 6. Error handling
 
+- [Error handling](https://github.com/suojae3/flutter_dart_docs/blob/main/dart/error_handling.md)
+
+
 <br/>
 
 #### 7. Classes & Objects
