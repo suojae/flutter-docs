@@ -124,7 +124,7 @@ final constantMap = const {
 
 - `Set` 과 마찬가지로 length를 통해 key-value 페어의 갯수를 알 수 있다.
 - `Set` 과 마찬가지로 `const`를 통해 값을 컴파일타임에 고정시킬 수 있다.
-- 
+ 
 
 <br/>
 
