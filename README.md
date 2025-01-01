@@ -78,7 +78,7 @@
 
 #
 
-### Core libraties
+### Core libraries
 
 
 - [Asynchronous porgramming: futures, async, await](https://github.com/suojae/flutter_dart_docs/blob/main/dart/async_programming.md)
