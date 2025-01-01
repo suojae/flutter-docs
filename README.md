@@ -1,4 +1,4 @@
-## flutter_docs_study
+## flutter_docs
 
 <br/>
 <br/>
