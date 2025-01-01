@@ -63,7 +63,12 @@ late String temperature = readThermometer(); // Lazily initialized.
 
 #### Final and const
 
+```dart
+foo = [1, 2, 3]; // Was const []
+```
 
+- `Final`과 `Const`는 각각 런타임 상수와 컴파일 타임 상수이다.
+- `foo`와 같이 그냥 값넣으면 const로 된다.
 
 
 
