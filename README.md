@@ -25,6 +25,8 @@
 
 #### 1. Syntax basics
 
+- [Variables](https://github.com/suojae/flutter-docs/blob/main/dart/variables.md)
+
 <br/>
 
 #### 2. Types
