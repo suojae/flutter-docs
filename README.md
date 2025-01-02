@@ -112,7 +112,7 @@
 
 - [Navigation & routing overview](https://github.com/suojae3/flutter_dart_docs/blob/main/dart/navigation_and_routing.md)
 
-
+- [Animation tutorial](https://github.com/suojae/flutter-docs/blob/main/flutter/Animations-tutorial.md)
 
 <br/>
 
