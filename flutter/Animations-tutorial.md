@@ -109,6 +109,236 @@ _animation.addStatusListener((status) {
 - `addListener()`: 애니메이션 값이 변경될 때 호출. 예: UI를 다시 그리기 위해 setState() 호출.
 - `addStatusListener()`:애니메이션 상태 변화(시작, 완료, 역방향 등)를 감지.
 
+<br/>
 
 
+### Curved Animation 
 
+```dart
+animation = CurvedAnimation(parent: controller, curve: Curves.easeIn);
+```
+
+- Flutter에서 애니메이션 디폴트값은 선형적으로 진행된다,
+- `Curved Animation`은 애니메이션의 진행상태를 **비선형 곡선**으로 정의하는데 사용된다.
+- `parent`: 애니메이션의 실제 진행상태를 관리하는 `Animation Controller`
+- `curve`: 진행률에 적용할 곡선, Flutter의 `Curves`클래스에서 제공
+
+<br/>
+
+- `Curves` 클래스란 Flutter에서 애니메이션 진행률(progress)을 조작할 수 있는 추상클래스이다.
+- `Curves` 클래스를 사용하면 진행률을 비선형적으로 바꿀 수 있다.
+- `Curves.linear`: 선형으로 진행
+- `Curves.easeIn`: 점점 빨라지는 곡선
+- `Curves.easeOut`: 점점 느려지는 곡선
+- `Curves.elasticIn`: 탄성 효과로 시작
+- `Curves.bounceOut`: 튕기는 효과로 종료
+
+<br/>
+
+```dart
+class ShakeCurve extends Curve {
+  @override
+  double transform(double t) => sin(t * pi * 2);
+}
+```
+- `입력값 t`: 애니메이션의 진행률. 범위는 0.0부터 1.0까지
+- `sin(...)`: 사인 함수는 -1에서 1 사이의 값을 반환하며 주기적인 진동을 생성
+- 입력 값이 0.0에서 1.0까지 변할 때, 사인 함수는 아래와 같은 패턴으로 움직인다: 0.0 → 0 (시작점), 0.25 → 1 (최고점), 0.5 → 0 (다시 원점), 0.75 → -1 (최저점), 1.0 → 0 (다시 원점)
+
+<br/>
+
+
+### AnimationController
+
+- `Animation Controller`는 Flutter에서 애니메이션의 진행 상태를 제어하는 핵심 클래스이다.
+- `Animation Controller`는 애니메이션의 시작, 중지, 방향 전환등을 관리하며 화면의 새 프레임이 준비될 때마다 새로운 값을 생성한다.
+- 상태 제어는 아래 4가지 메서드로 관리한다.
+- `forward()`: 애니메이션을 시작
+- `reverse()`: 애니메이션을 역방향으로 실행
+- `stop()`: 애니메이션 중지
+- `repreat()`: 애니메이션을 반복
+
+<br/>
+
+```dart
+class _LogoAppState extends State<LogoApp> {
+class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
+  late Animation<double> animation;
+  late AnimationController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller =
+        AnimationController(duration: const Duration(seconds: 2), vsync: this);
+    animation = Tween<double>(begin: 0, end: 300).animate(controller)
+      ..addListener(() {
+        setState(() {
+          // The state that has changed here is the animation object's value.
+        });
+      });
+    controller.forward();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        height: 300,
+        width: 300,
+        height: animation.value,
+        width: animation.value,
+        child: const FlutterLogo(),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+}
+```
+- 리스터는 아래 두가지 메서드로 한다.
+- `addListener()`: 애니메이션 값변경시 호출
+- `addStatusListener()`: 애니메이션의 상태 변경(시작, 완료, 역방향 등) 시 호출
+- 값이 변경될 때(`addListener()`)마다 `setState()`를 호출시켜 현재프레임을 dirty로 만든뒤 `build()`메서드를 실행시켜 ui를 업데이트함
+
+<br/>
+
+```dart
+import 'package:flutter/material.dart';
+
+class MyAnimatedWidget extends StatefulWidget {
+  const MyAnimatedWidget({super.key});
+
+  @override
+  State<MyAnimatedWidget> createState() => _MyAnimatedWidgetState();
+}
+
+class _MyAnimatedWidgetState extends State<MyAnimatedWidget>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    // AnimationController 생성 시 vsync 설정
+    _controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this, // vsync로 현재 객체 제공
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose(); // 리소스 정리
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: _controller.value,
+          child: child,
+        );
+      },
+      child: Container(
+        width: 100,
+        height: 100,
+        color: Colors.blue,
+      ),
+    );
+  }
+}
+
+void main() => runApp(const MaterialApp(home: Scaffold(body: MyAnimatedWidget())));
+```
+
+- `vsync`는 필수적으로 들어간다. vsync는 애니메이션 프레임 생성이 디스플레이의 화면 새로 고침 빈도와 동기화되도록한다. 만약 화면이 초당 60프레임을 지원하면, 애니메이션은 1초에 최대 60개의 프레임만 생성한다.
+- `vsyncs`는 화면에 보이지 않는(off-screen) 애니메이션이 실행 중일 때, 애니메이션이 불필요한 프레임을 생성하지 않도록 방지하기도 한다.
+- `vsync`를 지정하지 않으면 Flutter는 모든 프레임을 계속 생성하므로 리소스 낭비가 심해지며 경고가 뜨기도 한다.
+
+<br/>
+
+### Refactoring with Animated Builder
+
+```dart
+
+//  "어떻게" 애니메이션을 구현할지는 AnimationController가 처리
+_controller = AnimationController(
+  duration: const Duration(seconds: 2), // 애니메이션 시간 정의
+  vsync: this,
+)..repeat(reverse: true); // 애니메이션 반복
+
+
+// AnimationController에서 애니메이션 설계를 했다면 AnimatedBuilder는 구체적인 구현을 맡아서 진행한다
+return AnimatedBuilder(
+  animation: _controller,
+  builder: (context, child) {
+    // 애니메이션 값(_controller.value)에 따라 빌드 로직 결정
+    return Transform.scale(
+      scale: _controller.value, // 크기 변경
+      child: child,
+    );
+  },
+  child: Container(
+    width: 100,
+    height: 100,
+    color: Colors.blue, // 고정된 UI
+  ),
+);
+
+```
+- `AnimateBuilder`는 Flutter에서 애니메이션을 활용하여 효율적으로 UI를 업데이트하기 위한 위젯이다.
+- 애니메이션이 변경될 때마다 "특정위젯"만 다시 빌드하고, `setState()`를 반복적으로 호출할 필요없이 애니메이션과 빌드로직을 분리한다.
+- `AnimateBuilder`는 어떻게 위젯이 렌더링되는지 알지못하고 `Animation`객체를 관리하지 않는다. 오직 빌드로직을 맡는다.즉 어떻게 구현할까와 빌드로직을 분리해서 관리하는 것이다.
+
+<br/>
+
+### Simultaneous animations 
+
+```dart
+controller = AnimationController(duration: const Duration(seconds: 2), vsync: this);
+sizeAnimation = Tween<double>(begin: 0, end: 300).animate(controller);
+opacityAnimation = Tween<double>(begin: 0.1, end: 1).animate(controller);
+
+class AnimatedLogo extends AnimatedWidget {
+  const AnimatedLogo({super.key, required Animation<double> animation})
+      : super(listenable: animation);
+
+  // Make the Tweens static because they don't change.
+  static final _opacityTween = Tween<double>(begin: 0.1, end: 1);
+  static final _sizeTween = Tween<double>(begin: 0, end: 300);
+
+  @override
+  Widget build(BuildContext context) {
+    final animation = listenable as Animation<double>;
+    return Center(
+      child: Opacity(
+        opacity: _opacityTween.evaluate(animation),
+        child: Container(
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          height: _sizeTween.evaluate(animation),
+          width: _sizeTween.evaluate(animation),
+          child: const FlutterLogo(),
+        ),
+      ),
+    );
+  }
+}
+```
+- Flutter에서 동시 애니메이션을 구현하는 방법은 다음과 같다:
+
+1. 하나의 `AnimationController`로 여러 애니메이션 관리:
+- 여러 Tween을 사용하여 동일한 AnimationController로 값을 계산.
+- 예: sizeAnimation, opacityAnimation을 같은 controller에서 생성.
+
+2. 다중 `AnimationController` 사용:
+- 서로 다른 AnimationController를 사용해 독립적인 애니메이션 진행.
+- 예: 위치와 회전 애니메이션을 각각 다른 속도로 실행.
