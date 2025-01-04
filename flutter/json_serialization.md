@@ -3,7 +3,7 @@
 
 <br/>
 
-## JSON and serialization
+## JSON serialization
 
 <br/>
 
