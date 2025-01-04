@@ -124,6 +124,12 @@ void main() {
 }
 ```
 
+- `@JsonSerializable()` → 이 클래스가 JSON 직렬화/역직렬화 대상임을 나타냄.
+- `factory User.fromJson()` → JSON을 User 객체로 변환하는 코드가 자동 생성됨.
+- `Map<String, dynamic> toJson()` → User 객체를 JSON으로 변환하는 코드가 자동 생성됨.
+
+<br/>
+
 ```dart
 // 모델 클래스 방식 직렬화/역직렬화
 import 'dart:convert';
@@ -198,12 +204,127 @@ class User {
 
 
 ```dart
+import 'package:json_annotation/json_annotation.dart';
 
+part 'user.g.dart';
+
+@JsonSerializable()
+class User {
+  @JsonKey(name: 'full_name')  // JSON 필드명과 Dart 변수명 다름
+  final String name;
+
+  @JsonKey(name: 'user_email')
+  final String email;
+
+  User(this.name, this.email);
+
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+  Map<String, dynamic> toJson() => _$UserToJson(this);
+}
 ```
 
--💡 API의 JSON 키와 Dart 클래스 필드 이름이 다를 경우, @JsonKey(name:)을 사용하면 자동 매핑이 가능하다.
-- 위처럼 API의 JSON 키가 registration_date_millis인데, Dart에서는 registrationDateMillis를 사용하고 싶다면 @JsonKey(name:)을 활용하면 된다.
+- API의 JSON 키와 Dart 클래스 필드 이름이 다를 경우, @JsonKey(name:)을 사용하면 자동 매핑이 가능하다.
+- 위처럼 API의 JSON 키가 user_email인데, Dart에서는 email을 사용하고 싶다면 @JsonKey(name:)을 활용하면 된다.
 
+<br/>
+
+```dart
+class User {
+  @JsonKey(defaultValue: false) // 기본값 지정
+  final bool isAdult;
+
+  @JsonKey(required: true) // JSON에 반드시 포함되어야 함
+  final String id;
+
+  @JsonKey(ignore: true) // JSON 변환에서 제외
+  final String verificationCode;
+
+  User(this.isAdult, this.id, this.verificationCode);
+
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+  Map<String, dynamic> toJson() => _$UserToJson(this);
+}
+```
+- 서버에서 데이터가 확실하지 않을 때, @JsonKey를 활용하면 데이터 검증 및 예외 처리도 가능하다.
+- `@JsonKey(defaultValue: false)` → isAdult 값이 없거나 null이면 기본값 false 적용.
+- `@JsonKey(required: true)` → JSON에 id 필드가 없으면 예외 발생.
+- `@JsonKey(ignore: true)` → verificationCode 필드는 JSON 변환에서 제외됨.
+
+<br/>
+
+
+```dart
+@JsonSerializable(fieldRename: FieldRename.snake)
+class User {
+  String firstName;
+  String lastName;
+
+  User(this.firstName, this.lastName);
+
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+  Map<String, dynamic> toJson() => _$UserToJson(this);
+}
+```
+- `@JsonSerializable(fieldRename: FieldRename.snake)`을 사용하면 자동 변환도 할 수 있다.
+- 코드에서 API의 JSON 키가 `first_name`, `last_name`처럼 snake_case로 오면, 자동으로 Dart의 `firstName`, `lastName`으로 매핑된다.
+
+<br/>
+
+### Generating code for nested classes
+
+**📌 explicitToJson: true 없이 실행하면?**
+```dart
+@JsonSerializable() // ❌ 기본 설정 (explicitToJson 없음)
+class User {
+  User(this.name, this.address);
+
+  String name;
+  Address address;
+
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+  Map<String, dynamic> toJson() => _$UserToJson(this); // ❌ Address 객체 변환 문제 발생
+}
+
+// ❌ Address 객체가 toString()으로 변환되어 JSON이 제대로 출력되지 않음! 🚨
+{
+  "name": "John",
+  "address": "Instance of 'Address'"
+}
+```
+
+<br/>
+
+**📌 올바른 User 클래스 정의 (explicitToJson: true 추가)**
+```dart
+import 'package:json_annotation/json_annotation.dart';
+import 'address.dart';
+
+part 'user.g.dart';
+
+@JsonSerializable(explicitToJson: true) // ✅ 중첩된 객체도 JSON으로 변환하도록 설정
+class User {
+  User(this.name, this.address);
+
+  String name;
+  Address address;
+
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+  Map<String, dynamic> toJson() => _$UserToJson(this);
+}
+
+// 📌 출력 결과 (문제 해결됨!)
+{
+  "name": "John",
+  "address": {
+    "street": "My st.",
+    "city": "New York"
+  }
+}
+```
+
+- explicitToJson: true 옵션을 사용하면, 중첩된 객체의 toJson() 메서드가 자동으로 호출된다
+- 중첩된 객체를 자동 변환하면 불필요한 JSON 변환 코드가 많아져서 성능이 저하될 수 있다.
+- 따라서, Flutter는 기본적으로 객체를 자동으로 JSON으로 변환하지 않도록 설정하고, 개발자가 필요할 때 explicitToJson: true를 추가하도록 설계했다.
 
 
 
