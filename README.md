@@ -122,6 +122,7 @@
 #### Data & backend
 - [Store key-value data on disk](https://docs.flutter.dev/cookbook/persistence/key-value)
 - [Fetch data from the internet](https://github.com/suojae/flutter-docs/blob/main/flutter/fetch_data.md)
+- [JSON serialization](https://github.com/suojae/flutter-docs/blob/main/flutter/json_serialization.md)
 
 #### Testing & debugging
 - [An introduction to unit testing](https://github.com/suojae3/flutter_dart_docs/blob/main/flutter/unit_testing.md)
